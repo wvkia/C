@@ -12,6 +12,6 @@
 int main(){
     printf("hello");
     //如果输入未知字符，会报错-Wunknown-escape-sequence
-    printf("hello,worl \c d");
+    printf("hello,world");
 }
 
