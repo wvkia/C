@@ -136,3 +136,68 @@ int *p =a[0];第一行的地址，一维数组用指向的指针
 p + 1地址的移动是 p + 1 * (列数 * sizeof(int))
 ```
 
+### 动态存储分配 （dynamic storage allocation）
+
+程序执行期间分配内存单元，根据动态存储分配可以设计扩大或缩小
+
+``<stdlib.h>``库：
+
++ malloc -- 分配内存块，但不对内存卡初始化
++ calloc -- 分配内存块，对内存初始化，会比malloc慢
++ realloc -- 调整先前分配的内存块
+
+因为上述函数不知道准备在内存块存什么类型的数据，所以都是返回void * 指针，代表通用指针，可以被转成其他类型的指针
+
+如果没有分配出内存，会返回NULL空指针，
+
+```
+p = malloc(100);
+if (p == NULL){
+
+    //分配失败，处理
+}
+
+void * malloc(size_t size);分配size字节的内存块，并返回指针，size_t类型是C定义的C符号整数类型
+
+通常需要sizeof配合，得到字节数
+int *p = malloc(N * sizeof(int));
+
+void *calloc(size_t nmemb ,size_t size);
+为nmemb个元素的数组分配内存，每个元素占用size字节的大小，并初始化内存0
+
+void *realloc(void *ptr, size_t size);调整内存大小，ptr必须指向先前通过malloc、calloc或realloc分配的内存地址，size表示新的内存尺寸，如果比之前大会扩展；
+如果不能扩展，就返回空指针NULL，但之前内存的数据不会动
+
+malloc和其他分配函数的内存都是来自 **堆（heap）**的内存存储池，如果不释放，会导致堆内存耗尽，通过
+free(p);来释放内存
+同时避免悬空指针，也就是p内存被释放了，但后面又用了，通常用 p=NULL 来进行编译器校验
+
+```
+
+指针就是个数，也占用内存，所以指针也有内存地址，也就有指针的指针，例如char **p;
+
+函数也是二进制字节流，在内存中也是数，函数也有地址，所以也有函数指针，也就是指向函数的指针
+
+void (*f) (int);表示函数参数为int，返回void的函数指针f
+
+可以(*p)(1)调用f，也可以f(1)调用
+
+```
+
+int max(int x,int y){}
+
+ //参数为函数指针的函数
+int min(int x, int (*p)(int,int)){
+    p(1,x);p可以作为函数直接调用
+
+}
+
+int main(){
+
+    int (*p) (int,int) = max; 可以&max，也可以不用
+    p(1,2);函数指针直接调用
+
+    min(1,p);
+}
+
+```
